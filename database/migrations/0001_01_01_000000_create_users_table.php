@@ -13,12 +13,25 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->boolean('activated')->default(false);
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->string('activation_code')->nullable();
+            $table->timestamp('activated_at')->nullable();
+            $table->timestamp('last_login')->nullable();
+            $table->string('reset_password_code')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->timestamps();  // created_at dan updated_at
+            $table->softDeletes(); // deleted_at
+            $table->string('employee_num')->nullable();
+            $table->string('username')->unique();
+            $table->text('notes')->nullable();
+            $table->string('role')->default('user');
+
+            // Kalau mau bikin foreign key untuk created_by (opsional)
+            $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -42,8 +55,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

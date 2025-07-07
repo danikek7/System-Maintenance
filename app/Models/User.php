@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
-    // Jika ID primary key-nya adalah 'id_user'
-    protected $primaryKey = 'id_user';
+    // Primary key tetap 'id' sesuai migration baru
+    protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -19,9 +20,19 @@ class User extends Authenticatable
      * Kolom yang bisa diisi massal
      */
     protected $fillable = [
-        'nama_user',
-        'username',
+        'email',
         'password',
+        'activated',
+        'created_by',
+        'activation_code',
+        'activated_at',
+        'last_login',
+        'reset_password_code',
+        'first_name',
+        'last_name',
+        'employee_num',
+        'username',
+        'notes',
         'role',
     ];
 
@@ -31,17 +42,22 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'activation_code',
+        'reset_password_code',
     ];
 
     /**
-     * Casts
+     * Casts untuk atribut tertentu
      */
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'password' => 'hashed',
+        'activated' => 'boolean',
+        'activated_at' => 'datetime',
+        'last_login' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
 
     /**
      * Untuk autentikasi pakai kolom username
@@ -49,5 +65,13 @@ class User extends Authenticatable
     public function getAuthIdentifierName()
     {
         return 'username';
+    }
+
+    /**
+     * Relasi ke user yang membuat user ini
+     */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
