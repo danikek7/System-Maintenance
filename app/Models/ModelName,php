@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class ModelName extends Model
+{
+    use SoftDeletes;
+
+    protected $table = 'model';  // sesuai nama tabel
+
+    protected $fillable = [
+        'name',
+        'created_by',
+        'notes',
+    ];
+
+    // Relasi ke User pembuat
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // Relasi ke Asset
+    public function assets()
+    {
+        return $this->hasMany(Asset::class, 'model_id');
+    }
+}
