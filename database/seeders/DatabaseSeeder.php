@@ -13,5 +13,9 @@ class DatabaseSeeder extends Seeder
     {
         // Jalankan UserSeeder
         $this->call(UserSeeder::class);
+        $this->call(StatusLabelSeeder::class);
+        $this->call(LocationSeeder::class);
+        $this->call(AssetSeeder::class);
+        $this->call(MaintenanceScheduleSeeder::class);
     }
 }
