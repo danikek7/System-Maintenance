@@ -54,28 +54,28 @@
             <nav class="flex-1 p-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="{{ route('dashboard') }}"
+                        <a href="{{ route('admin.dashboard') }}"
                            class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.jadwal') }}"
+                        <a href="{{ route('admin.jadwal.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">event_note</span>
                             <span>Jadwal</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.aset') }}"
+                        <a href="{{ route('admin.aset.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">inventory_2</span>
                             <span>Aset</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('admin.parameter.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">tune</span>
                             <span>Parameter</span>
