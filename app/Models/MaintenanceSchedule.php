@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+=======
+>>>>>>> 2ee3ae382efb6fae6098d1ccc99418a08c306b01
 use Illuminate\Database\Eloquent\Model;
 
 class MaintenanceSchedule extends Model
 {
+<<<<<<< HEAD
     use HasFactory;
 
     protected $table = 'maintenance_schedule';
@@ -64,4 +68,22 @@ public function scheduleStatus()
 }
 
 
+=======
+    protected $table = 'maintenance_schedule'; // sesuaikan nama tabel
+    
+    protected $fillable = [
+        'asset_id',
+        'schedule_date',
+        'name_schedule',
+        'location_id',
+        'status',
+        // tambahkan kolom lain jika ada
+    ];
+
+    // Relasi ke lokasi (misal tabel locations)
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id');
+    }
+>>>>>>> 2ee3ae382efb6fae6098d1ccc99418a08c306b01
 }
