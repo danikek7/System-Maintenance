@@ -11,7 +11,7 @@ class MaintenanceSchedule extends Model
     protected $fillable = [
         'asset_id',
         'schedule_date',
-        'nama_jadwal',
+        'name_schedule',
         'location_id',
         'status',
         // tambahkan kolom lain jika ada

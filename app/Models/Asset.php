@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Location;
+use App\Models\ModelAssets;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Asset extends Model
 {
-    use SoftDeletes;
 
     protected $table = 'assets';
 
@@ -15,35 +15,33 @@ class Asset extends Model
         'name',
         'asset_tag',
         'model_id',
+        'kategori_id',
         'serial',
         'notes',
         'created_by',
         'status_id',
-        'rtd_location',
+        'produsen_id',
         'location_id',
     ];
 
-    // Relasi ke status label
-    public function status()
-    {
-        return $this->belongsTo(StatusLabel::class, 'status_id');
-    }
-
-    // Relasi ke lokasi
-    public function location()
+    /**
+     * Relasi ke tabel locations
+     */
+    public function lokasi()
     {
         return $this->belongsTo(Location::class, 'location_id');
     }
-
-    // Relasi ke model (misalnya tipe asset)
     public function model()
     {
-        return $this->belongsTo(ModelName::class, 'model_id');
+        return $this->belongsTo(ModelAssets::class, 'model_id')->withTrashed();
+    }
+    public function kategori()
+    {
+        return $this->belongsTo(Category::class, 'kategori_id');
     }
 
-    // Relasi ke user pembuat
-    public function creator()
+    public function produsen()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(Manufacture::class, 'produsen_id');
     }
 }

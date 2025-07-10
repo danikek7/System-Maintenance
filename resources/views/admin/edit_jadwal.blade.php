@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tambah Jadwal Maintenance</title>
+    <title>Edit Jadwal Maintenance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <style>
@@ -11,11 +11,7 @@
             background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
         }
         .material-symbols-outlined {
-            font-variation-settings:
-              'FILL' 0,
-              'wght' 400,
-              'GRAD' 0,
-              'opsz' 24;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
 </head>
@@ -32,36 +28,24 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Navigation -->
             <nav class="flex-1 p-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.jadwal.index') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
+                        <a href="{{ route('admin.jadwal.index') }}" class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
                             <span class="material-symbols-outlined">event_note</span>
                             <span>Jadwal</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.aset.index') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
+                        <a href="{{ route('admin.aset.index') }}" class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
                             <span class="material-symbols-outlined">inventory_2</span>
                             <span>Aset</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
-                            <span class="material-symbols-outlined">tune</span>
-                            <span>Parameter</span>
                         </a>
                     </li>
                 </ul>
@@ -71,7 +55,7 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-auto p-8">
             <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-8">
-                <h1 class="text-2xl font-bold mb-6">Tambah Jadwal Maintenance</h1>
+                <h1 class="text-2xl font-bold mb-6">Edit Jadwal Maintenance</h1>
 
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -83,14 +67,9 @@
                     </div>
                 @endif
 
-                @if (session('success'))
-                    <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <form action="{{ route('admin.jadwal.tambah') }}" method="POST" class="space-y-6">
+                <form action="{{ route('admin.jadwal.update', $jadwal->id) }}" method="POST" class="space-y-6">
                     @csrf
+                    @method('PUT')
 
                     <div>
                         <label for="bulan" class="block font-medium mb-1">Bulan</label>
@@ -98,7 +77,7 @@
                             type="month"
                             id="bulan"
                             name="bulan"
-                            value="{{ old('bulan') }}"
+                            value="{{ old('bulan', \Carbon\Carbon::parse($jadwal->schedule_date)->format('Y-m')) }}"
                             required
                             class="w-full border border-gray-300 rounded px-3 py-2"
                         />
@@ -110,24 +89,23 @@
                             type="text"
                             id="name_schedule"
                             name="name_schedule"
-                            value="{{ old('name_schedule') }}"
-                            placeholder="Masukkan nama jadwal"
+                            value="{{ old('name_schedule', $jadwal->name_schedule) }}"
                             required
                             class="w-full border border-gray-300 rounded px-3 py-2"
                         />
                     </div>
 
                     <div>
-                        <label for="lokasi" class="block font-medium mb-1">Lokasi</label>
+                        <label for="location_id" class="block font-medium mb-1">Lokasi</label>
                         <select
-                            id="lokasi"
-                            name="lokasi"
+                            id="location_id"
+                            name="location_id"
                             required
                             class="w-full border border-gray-300 rounded px-3 py-2"
                         >
                             <option value="">-- Pilih Lokasi --</option>
                             @foreach ($locations as $location)
-                                <option value="{{ $location->id }}" {{ old('lokasi') == $location->id ? 'selected' : '' }}>
+                                <option value="{{ $location->id }}" {{ $jadwal->location_id == $location->id ? 'selected' : '' }}>
                                     {{ $location->lokasi }}
                                 </option>
                             @endforeach
@@ -135,20 +113,32 @@
                     </div>
 
                     <div>
-                        <label class="block font-medium mb-1">Aset</label>
-                        <div class="space-y-2 max-h-48 overflow-y-auto border border-gray-300 rounded p-3 bg-gray-50">
+                        <label for="asset_id" class="block font-medium mb-1">Aset</label>
+                        <select
+                            id="asset_id"
+                            name="asset_id"
+                            required
+                            class="w-full border border-gray-300 rounded px-3 py-2"
+                        >
+                            <option value="">-- Pilih Aset --</option>
                             @foreach ($assets as $asset)
-                                <label class="flex items-center space-x-2">
-                                    <input
-                                        type="checkbox"
-                                        name="aset[]"
-                                        value="{{ $asset->id }}"
-                                        {{ is_array(old('aset')) && in_array($asset->id, old('aset')) ? 'checked' : '' }}
-                                    />
-                                    <span>{{ $asset->name }}</span>
-                                </label>
+                                <option value="{{ $asset->id }}" {{ $jadwal->asset_id == $asset->id ? 'selected' : '' }}>
+                                    {{ $asset->name }}
+                                </option>
                             @endforeach
-                        </div>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block font-medium mb-1">Status</label>
+                        <select
+                            id="status"
+                            name="status"
+                            class="w-full border border-gray-300 rounded px-3 py-2"
+                        >
+                            <option value="1" {{ $jadwal->status == 1 ? 'selected' : '' }}>Pending</option>
+                            <option value="2" {{ $jadwal->status == 2 ? 'selected' : '' }}>Selesai</option>
+                        </select>
                     </div>
 
                     <div class="flex space-x-4">
@@ -156,10 +146,10 @@
                             type="submit"
                             class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
                         >
-                            Simpan Jadwal
+                            Simpan Perubahan
                         </button>
                         <a href="{{ route('admin.jadwal.index') }}" class="inline-block px-6 py-2 border border-gray-300 rounded hover:bg-gray-100">
-                            Kembali ke Daftar Jadwal
+                            Batal
                         </a>
                     </div>
                 </form>

@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\AsetController;
+use App\Http\Controllers\Admin\ParameterController; // ✅ Tambahkan ini
 
 /*
 |--------------------------------------------------------------------------
@@ -11,83 +14,81 @@ use App\Http\Controllers\Admin\JadwalController;
 |--------------------------------------------------------------------------
 */
 
-// Halaman awal
+// Halaman welcome
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Redirect dashboard sesuai role
+// Redirect dashboard sesuai role setelah login
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
-    switch ($user->role) {
-        case 'admin':
-            return redirect()->route('admin.dashboard');
-        case 'manager':
-            return redirect()->route('manager.dashboard');
-        case 'pic':
-            return redirect()->route('pic.dashboard');
-        case 'pelaksana':
-            return redirect()->route('pelaksana.dashboard');
-        default:
-            abort(403, 'Role tidak dikenali.');
-    }
+    return match ($user->role) {
+        'admin'     => redirect()->route('admin.dashboard'),
+        'manager'   => redirect()->route('manager.dashboard'),
+        'pic'       => redirect()->route('pic.dashboard'),
+        'pelaksana' => redirect()->route('pelaksana.dashboard'),
+        default     => abort(403, 'Role tidak dikenali.'),
+    };
 })->middleware('auth')->name('dashboard');
 
 // ==========================
-// Admin Routes
+// Admin Routes (auth + role:admin)
 // ==========================
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard Admin
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Daftar jadwal maintenance
-    Route::get('/jadwal', [JadwalController::class, 'index'])->name('admin.jadwal');
+    // Jadwal Maintenance
+    Route::controller(JadwalController::class)->prefix('jadwal')->name('jadwal.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/form', 'create')->name('form');
+        Route::post('/tambah', 'store')->name('tambah');
+        Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'destroy')->name('destroy');
+    });
 
-    // Form tambah jadwal maintenance
-    Route::get('/jadwal/form', [JadwalController::class, 'create'])->name('admin.jadwal.form');
+    // Aset
+    Route::controller(AsetController::class)->prefix('aset')->name('aset.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'destroy')->name('destroy');
+    });
 
-    // Simpan jadwal maintenance
-    Route::post('/jadwal/tambah', [JadwalController::class, 'store'])->name('admin.jadwal.tambah');
-
-    // Halaman Aset (sementara pakai closure, bisa dibuat controller juga)
-    Route::get('/aset', function () {
-        return view('admin.aset');
-    })->name('admin.aset');
+    // ✅ Parameter
+    Route::controller(ParameterController::class)->prefix('parameter')->name('parameter.')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
 });
 
 // ==========================
 // Manager Routes
 // ==========================
-Route::middleware(['auth', 'role:manager'])->group(function () {
-    Route::get('/manager', function () {
-        return view('manager.dashboard');
-    })->name('manager.dashboard');
+Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::view('/', 'manager.dashboard')->name('dashboard');
 });
 
 // ==========================
 // PIC Routes
 // ==========================
-Route::middleware(['auth', 'role:pic'])->group(function () {
-    Route::get('/pic', function () {
-        return view('pic.dashboard');
-    })->name('pic.dashboard');
+Route::middleware(['auth', 'role:pic'])->prefix('pic')->name('pic.')->group(function () {
+    Route::view('/', 'pic.dashboard')->name('dashboard');
 });
 
 // ==========================
 // Pelaksana Routes
 // ==========================
-Route::middleware(['auth', 'role:pelaksana'])->group(function () {
-    Route::get('/pelaksana', function () {
-        return view('pelaksana.dashboard');
-    })->name('pelaksana.dashboard');
+Route::middleware(['auth', 'role:pelaksana'])->prefix('pelaksana')->name('pelaksana.')->group(function () {
+    Route::view('/', 'pelaksana.dashboard')->name('dashboard');
 });
 
 // ==========================
-// Profile Routes (Breeze default)
+// Profile Routes
 // ==========================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -95,7 +96,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ==========================
-// Auth Routes (Breeze default)
-// ==========================
+// Auth routes (login, register, etc.)
 require __DIR__ . '/auth.php';
