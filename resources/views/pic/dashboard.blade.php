@@ -39,37 +39,7 @@
 
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 sidebar-gradient text-white flex flex-col">
-            <div class="p-6 border-b border-blue-400">
-                <div class="flex items-center space-x-3">
-                    <img src="{{ asset('logo.png') }}" alt="Logo" class="w-8 h-8 object-contain" />
-                    <div>
-                        <h1 class="font-bold text-lg">Maintenance</h1>
-                        <p class="text-sm text-blue-200">System</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="flex-1 p-4">
-                <ul class="space-y-1">
-                    <li>
-                        <a href="{{ route('dashboard') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
-                            <span class="material-symbols-outlined">dashboard</span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
-                            <span class="material-symbols-outlined">event_note</span>
-                            <span>Jadwal</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        @include('components.sidebar')
 
         <!-- Main content -->
         <div class="flex-1 flex flex-col">
@@ -94,36 +64,6 @@
                 <div class="max-w-7xl mx-auto">
                     <h2 class="text-xl font-bold mb-6">Selamat datang, {{ auth()->user()->name ?? 'Pic' }}</h2>
 
-                    <!-- Cards -->
-                    <div class="grid grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Statistik Jadwal</h3>
-                            <div class="flex items-center justify-center mb-4">
-                                <div class="relative w-24 h-24">
-                                    <canvas id="jadwalChart"></canvas>
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <div class="text-2xl font-bold text-blue-600">67%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-500 text-center">Terlaksana bulan ini</p>
-                        </div>
-
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Total Aset</h3>
-                            <div class="grid grid-cols-2 gap-4 text-center">
-                                <div>
-                                    <p class="text-3xl text-blue-600 font-bold">165</p>
-                                    <p class="text-sm text-gray-600">Komputer</p>
-                                </div>
-                                <div>
-                                    <p class="text-3xl text-blue-600 font-bold">66</p>
-                                    <p class="text-sm text-gray-600">Printer</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Notifikasi -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifikasi</h3>
@@ -143,24 +83,26 @@
     </div>
 
     <script>
-        const ctx = document.getElementById('jadwalChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [67, 33],
-                    backgroundColor: ['#3b82f6', '#e5e7eb'],
-                    borderWidth: 0,
-                    cutout: '70%'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+        const ctx = document.getElementById('jadwalChart')?.getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [67, 33],
+                        backgroundColor: ['#3b82f6', '#e5e7eb'],
+                        borderWidth: 0,
+                        cutout: '70%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
                 }
-            }
-        });
+            });
+        }
     </script>
 </body>
 </html>

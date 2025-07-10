@@ -3,34 +3,32 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PicController;
+use App\Http\Controllers\ManagerController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application.
-|
 */
 
-// Halaman awal (public)
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard redirect ke halaman sesuai role
+// 🔐 Redirect ke dashboard berdasarkan role setelah login
 Route::get('/dashboard', function () {
-    $user = Auth::user(); // aman karena sudah pakai middleware 'auth'
+    $user = Auth::user();
 
     switch ($user->role) {
         case 'admin':
-            return redirect('/admin');
+            return redirect()->route('admin.dashboard');
         case 'manager':
-            return redirect('/manager');
+            return redirect()->route('manager.dashboard');
         case 'pic':
-            return redirect('/pic');
+            return redirect()->route('pic.dashboard');
         case 'pelaksana':
-            return redirect('/pelaksana');
+            return redirect()->route('pelaksana.dashboard');
         default:
             abort(403, 'Role tidak dikenali.');
     }
@@ -38,47 +36,73 @@ Route::get('/dashboard', function () {
 
 
 // ==========================
-// Admin Routes
+// ✅ Admin Routes
 // ==========================
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
-    Route::get('/admin/jadwal', function () {
-        return view('admin.jadwal');
-    })->name('admin.jadwal');
-
-    Route::get('/admin/aset', function () {
-        return view('admin.aset');
-    })->name('admin.aset');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
+    Route::get('/jadwal', fn () => view('admin.jadwal'))->name('jadwal');
+    Route::get('/aset', fn () => view('admin.aset'))->name('aset');
 });
 
 
 // ==========================
-// Manager Routes
+// ✅ Manager Routes
 // ==========================
-Route::middleware(['auth', 'role:manager'])->get('/manager', function () {
-    return view('manager.dashboard');
-})->name('manager.dashboard');
+Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::get('/', fn () => view('manager.dashboard'))->name('dashboard');
 
-// ==========================
-// PIC Routes
-// ==========================
-Route::middleware(['auth', 'role:pic'])->get('/pic', function () {
-    return view('pic.dashboard');
-})->name('pic.dashboard');
+    // Daftar semua jadwal
+    Route::get('/jadwal', [ManagerController::class, 'index'])->name('jadwal');
 
-// ==========================
-// Pelaksana Routes
-// ==========================
-Route::middleware(['auth', 'role:pelaksana'])->get('/pelaksana', function () {
-    return view('pelaksana.dashboard');
-})->name('pelaksana.dashboard');
+    // Detail jadwal dan form inspeksi
+    Route::get('/jadwal/{id}', [ManagerController::class, 'detail'])->name('jadwal.detail');
+
+    // Ganti status menjadi Dilaksanakan
+    Route::post('/jadwal/{id}/start', [ManagerController::class, 'mulai'])->name('jadwal.mulai');
+
+    // Ganti status menjadi Terlaksana
+    Route::post('/jadwal/{id}/selesai', [ManagerController::class, 'selesai'])->name('jadwal.selesai');
+});
 
 
 // ==========================
-// Profile Routes (Breeze default)
+// ✅ PIC Routes
+// ==========================
+Route::middleware(['auth', 'role:pic'])->prefix('pic')->name('pic.')->group(function () {
+    Route::get('/', [PicController::class, 'dashboard'])->name('dashboard');
+
+    // Daftar jadwal
+    Route::get('/jadwal', [PicController::class, 'jadwal'])->name('jadwal');
+
+    // Lihat form laporan / detail
+    Route::get('/jadwal/{id}/detail', [PicController::class, 'lihatJadwal'])->name('jadwal.detail');
+
+    // Approve / Reject
+    Route::get('/jadwal/{id}/approve', [PicController::class, 'approve'])->name('jadwal.approve');
+    Route::get('/jadwal/{id}/reject', [PicController::class, 'reject'])->name('jadwal.reject');
+
+    // Simpan laporan
+    Route::post('/jadwal/{id}/laporan', [PicController::class, 'simpanLaporan'])->name('laporan.store');
+
+    // Lihat laporan (readonly)
+    Route::get('/laporan/{id}/lihat', [PicController::class, 'lihatLaporan'])->name('laporan.show');
+
+    // Edit laporan (opsional)
+    Route::get('/laporan/{id}/edit', [PicController::class, 'editLaporan'])->name('laporan.edit');
+    Route::put('/laporan/{id}', [PicController::class, 'updateLaporan'])->name('laporan.update');
+});
+
+
+// ==========================
+// ✅ Pelaksana Routes
+// ==========================
+Route::middleware(['auth', 'role:pelaksana'])->prefix('pelaksana')->name('pelaksana.')->group(function () {
+    Route::get('/', fn () => view('pelaksana.dashboard'))->name('dashboard');
+});
+
+
+// ==========================
+// ✅ Profile Routes (Laravel Breeze)
 // ==========================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -86,8 +110,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-// ==========================
-// Auth Routes (Breeze default)
-// ==========================
 require __DIR__.'/auth.php';
