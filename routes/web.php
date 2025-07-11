@@ -6,23 +6,18 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\AsetController;
-use App\Http\Controllers\Admin\ParameterController; // ✅ Tambahkan ini
+use App\Http\Controllers\Admin\ParameterController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+// ==========================
+// Halaman Utama
+// ==========================
+Route::get('/', fn() => view('welcome'));
 
-// Halaman welcome
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Redirect dashboard sesuai role setelah login
+// ==========================
+// Redirect Dashboard per Role
+// ==========================
 Route::get('/dashboard', function () {
     $user = Auth::user();
-
     return match ($user->role) {
         'admin'     => redirect()->route('admin.dashboard'),
         'manager'   => redirect()->route('manager.dashboard'),
@@ -41,17 +36,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Jadwal Maintenance
-    Route::controller(JadwalController::class)->prefix('jadwal')->name('jadwal.')->group(function () {
+    Route::prefix('jadwal')->name('jadwal.')->controller(JadwalController::class)->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/form', 'create')->name('form');
-        Route::post('/tambah', 'store')->name('tambah');
+        Route::get('/create', 'create')->name('create'); // Ganti dari /form
+        Route::post('/store', 'store')->name('store');   // Ganti juga dari /tambah
         Route::get('/{id}/edit', 'edit')->name('edit');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
     });
 
     // Aset
-    Route::controller(AsetController::class)->prefix('aset')->name('aset.')->group(function () {
+    Route::prefix('aset')->name('aset.')->controller(AsetController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
@@ -60,8 +55,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::delete('/{id}', 'destroy')->name('destroy');
     });
 
-    // ✅ Parameter
-    Route::controller(ParameterController::class)->prefix('parameter')->name('parameter.')->group(function () {
+    // Parameter
+    Route::prefix('parameter')->name('parameter.')->controller(ParameterController::class)->group(function () {
         Route::get('/', 'index')->name('index');
     });
 });
@@ -96,5 +91,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Auth routes (login, register, etc.)
+// ==========================
+// Auth Routes (login, register, logout)
+// ==========================
 require __DIR__ . '/auth.php';

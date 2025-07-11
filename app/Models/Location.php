@@ -21,4 +21,9 @@ class Location extends Model
     // {
     //     return $this->belongsTo(Manager::class, 'manager_id');
     // }
+
+     public function assets()
+    {
+        return $this->hasMany(Asset::class);
+    }
 }

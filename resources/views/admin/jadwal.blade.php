@@ -24,7 +24,6 @@
 
 <body class="bg-gray-100 min-h-screen">
     <div class="flex h-screen">
-
         <!-- Sidebar -->
         <div class="w-64 sidebar-gradient text-white flex flex-col">
             <div class="p-6 border-b border-blue-400">
@@ -92,7 +91,7 @@
                 <div class="max-w-7xl mx-auto bg-white shadow rounded-lg p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-2xl font-semibold text-gray-800">Daftar Jadwal</h2>
-                        <a href="{{ route('admin.jadwal.form') }}"
+                        <a href="{{ route('admin.jadwal.create') }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">add</span>
                             Tambah Jadwal
@@ -114,7 +113,7 @@
                                     <th class="border border-gray-300 px-3 py-2 w-12 text-center">No</th>
                                     <th class="border border-gray-300 px-3 py-2 w-28">Tanggal</th>
                                     <th class="border border-gray-300 px-3 py-2 w-48">Nama Jadwal</th>
-                                    <th class="border border-gray-300 px-3 py-2 w-36">Lokasi</th>
+                                    <th class="border border-gray-300 px-3 py-2 w-36">Bulan</th>
                                     <th class="border border-gray-300 px-3 py-2 w-24 text-center">Status</th>
                                     <th class="border border-gray-300 px-2 py-2 w-20 text-center">Aksi</th>
                                 </tr>
@@ -126,15 +125,13 @@
                                             {{ $jadwals->firstItem() + $index }}
                                         </td>
                                         <td class="border border-gray-300 px-3 py-2">
-                                            {{ \Carbon\Carbon::parse($jadwal->schedule_date)->format('d M Y') }}
+                                            {{ \Carbon\Carbon::parse($jadwal->create_at)->format('d M Y') }}
                                         </td>
-                                        <td class="border border-gray-300 px-3 py-2 truncate max-w-xs"
-                                            title="{{ $jadwal->name_schedule }}">
-                                            {{ $jadwal->name_schedule ?? '-' }}
+                                        <td class="border border-gray-300 px-3 py-2 truncate max-w-xs" title="{{ $jadwal->nama }}">
+                                            {{ $jadwal->nama ?? '-' }}
                                         </td>
-                                        <td class="border border-gray-300 px-3 py-2 truncate max-w-xs"
-                                            title="{{ $jadwal->location->lokasi ?? $jadwal->location_id }}">
-                                            {{ $jadwal->location->lokasi ?? $jadwal->location_id }}
+                                        <td class="border border-gray-300 px-3 py-2 truncate max-w-xs" title="{{ $jadwal->bulan }}">
+                                            {{ $jadwal->bulan ?? '-' }}
                                         </td>
                                         <td class="border border-gray-300 px-3 py-2 text-center capitalize">
                                             @if ($jadwal->status == 1)
@@ -145,15 +142,14 @@
                                                 <span class="text-gray-600 font-semibold">Unknown</span>
                                             @endif
                                         </td>
-                                        <td class="border border-gray-300 px-2 py-2 w-20 text-center">
+                                        <td class="border border-gray-300 px-2 py-2 text-center">
                                             <div class="flex justify-center items-center gap-2">
                                                 <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
                                                     class="inline-flex items-center justify-center w-8 h-8 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full"
                                                     title="Edit">
                                                     <span class="material-symbols-outlined text-base">edit</span>
                                                 </a>
-                                                <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
-                                                    method="POST" onsubmit="return confirm('Yakin hapus?')">
+                                                <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Yakin hapus?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -164,12 +160,10 @@
                                                 </form>
                                             </div>
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-
 
                         <div class="mt-4">
                             {{ $jadwals->links() }}
