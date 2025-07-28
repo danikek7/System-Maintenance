@@ -38,6 +38,6 @@ class StatusLabel extends Model
     // Relasi ke jadwal maintenance (jika status dipakai di sana)
     public function maintenanceSchedules()
     {
-        return $this->hasMany(MaintenanceSchedule::class, 'status_id');
+        return $this->hasMany(Jadwal::class, 'status_id');
     }
 }

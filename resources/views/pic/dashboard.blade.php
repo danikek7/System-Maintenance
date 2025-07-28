@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Admin - Maintenance System</title>
@@ -23,18 +24,21 @@
         .sidebar-gradient {
             background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
         }
+
         .material-symbols-outlined {
             font-variation-settings:
-            'FILL' 0,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 24;
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
         }
+
         body {
             font-family: sans-serif;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 min-h-screen">
 
     <div class="flex h-screen">
@@ -54,45 +58,52 @@
             <nav class="flex-1 p-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="{{ route('dashboard') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
+                        <a href="{{ route('pic.dashboard') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
+                        <a href="{{ route('pic.laporan.index') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">event_note</span>
-                            <span>Jadwal</span>
+                            <span>Laporan</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+            <div class="p-4 border-t border-blue-400">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Main content -->
         <div class="flex-1 flex flex-col">
             <!-- Top Bar -->
-            <header class="sidebar-gradient text-white shadow p-4 flex items-center justify-between">
-                <div class="text-lg font-semibold">
-                    Dashboard Pic
+            <div class="sidebar-gradient text-white p-4 flex justify-end">
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm">{{ auth()->user()->username ?? 'Pic' }}</span>
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zM3 18a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-sm">{{ auth()->user()->name ?? 'Pic' }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </header>
+            </div>
 
             <!-- Content -->
             <main class="flex-1 p-8 overflow-auto">
                 <div class="max-w-7xl mx-auto">
-                    <h2 class="text-xl font-bold mb-6">Selamat datang, {{ auth()->user()->name ?? 'Pic' }}</h2>
+                    <h2 class="text-xl font-bold mb-6">Selamat datang, {{ auth()->user()->username ?? 'Pic' }}</h2>
 
                     <!-- Cards -->
                     <div class="grid grid-cols-2 gap-6 mb-8">
@@ -129,7 +140,9 @@
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Notifikasi</h3>
                         <ul class="space-y-3 text-sm text-gray-700">
                             <li class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                Jadwal maintenance untuk <strong>Printer EPSON L3120</strong> di <strong>Ruang ICU</strong> akan dilaksanakan pada tanggal <strong>24 Juli 2025</strong> pukul <strong>14:30 WIB</strong>.
+                                Jadwal maintenance untuk <strong>Printer EPSON L3120</strong> di <strong>Ruang
+                                    ICU</strong> akan dilaksanakan pada tanggal <strong>24 Juli 2025</strong> pukul
+                                <strong>14:30 WIB</strong>.
                             </li>
                             <li class="bg-green-50 border border-green-200 rounded-lg p-4">
                                 Semua aset di <strong>Farmasi</strong> telah melewati pemeriksaan rutin bulan ini.
@@ -157,10 +170,13 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: {
+                        display: false
+                    }
                 }
             }
         });
     </script>
 </body>
+
 </html>

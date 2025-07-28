@@ -39,7 +39,7 @@ class JadwalSeeder extends Seeder
             $jadwal = Jadwal::create([
                 'nama'       => 'Jadwal Bulan Juli',
                 'bulan'      => '2025-07',
-                'status_id'     => 1,
+                'status_jadwal'     => 1,
                 'create_by'  => 1,
                 'create_at'  => now(),
                 'status_inspeksi' => 0

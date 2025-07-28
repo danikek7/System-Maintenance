@@ -49,5 +49,26 @@ class UserSeeder extends Seeder
             'role' => 'pelaksana',
             'activated' => true,
         ]);
+
+        // Pelaksana kedua (tambahan baru)
+        User::create([
+            'first_name' => 'Pelaksana',
+            'last_name' => 'Dua',
+            'username' => 'pelaksana2',
+            'email' => 'pelaksana2@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'pelaksana',
+            'activated' => true,
+        ]);
+
+        User::create([
+            'first_name' => 'Pic',
+            'last_name' => 'Dua',
+            'username' => 'Pic2',
+            'email' => 'pic2@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'pic',
+            'activated' => true,
+        ]);
     }
 }

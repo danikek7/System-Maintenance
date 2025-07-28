@@ -12,10 +12,10 @@ class AssetsSeeder extends Seeder
     {
         DB::table('assets')->insert([
             [
-                'id' => 1795,
+                'id' => 1,
                 'name' => 'CONVERTER HDMI TO VGA',
                 'asset_tag' => 'RSFM-01795',
-                'model_id' => 179,
+                'model_id' => 1,
                 'serial' => '-',
                 'notes' => '-',
                 'created_by' => 2,

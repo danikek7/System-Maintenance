@@ -97,4 +97,13 @@ class AsetController extends Controller
 
         return redirect()->route('admin.aset.index')->with('success', 'Aset berhasil dihapus.');
     }
+
+    public function byLokasi($lokasi)
+    {
+        $assets = Asset::where('location_id', $lokasi)
+            ->select('id', 'name')
+            ->get();
+
+        return response()->json($assets);
+    }
 }

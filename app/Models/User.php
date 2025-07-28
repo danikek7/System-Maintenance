@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Location; 
 
 class User extends Authenticatable
 {
@@ -74,4 +75,25 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    // User.php
+
+public function manager()
+{
+    return $this->belongsTo(User::class, 'manager_id');
+}
+
+public function subordinates()
+{
+    return $this->hasMany(User::class, 'manager_id');
+}
+// public function locations()
+// {
+//     return $this->hasMany(Location::class, 'manager_id', 'id');
+// }
+public function location()
+{
+    return $this->belongsTo(Location::class, 'location_id');
+}
+
+
 }

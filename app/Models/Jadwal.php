@@ -1,24 +1,24 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Jadwal extends Model
 {
     protected $table = 'jadwals';
-
     protected $primaryKey = 'id';
 
-    public $timestamps = false;
+    // Sesuaikan dengan kolom custom
+    const CREATED_AT = 'create_at';
+    const UPDATED_AT = 'update_at';
 
     protected $fillable = [
         'nama',
         'bulan',
-        'status',
+        'status_jadwal',
         'manager_id',
-        'lokasi',
-        'assets',
+        'location_id',
         'create_at',
         'update_at',
         'create_by',
@@ -27,7 +27,6 @@ class Jadwal extends Model
     ];
 
     protected $casts = [
-        'assets' => 'array',
         'create_at' => 'datetime',
         'update_at' => 'datetime',
         'approve_at' => 'datetime',
@@ -48,13 +47,23 @@ class Jadwal extends Model
         return $this->belongsTo(User::class, 'update_by');
     }
 
-    public function lokasi()
+    public function location()
     {
-        return $this->belongsTo(Location::class, 'lokasi');
+        return $this->belongsTo(Location::class, 'location_id');
     }
+    public function detailJadwal()
+    {
+        return $this->hasMany(DetailJadwal::class, 'jadwal_id');
+    }
+
     public function details()
-{
-    return $this->hasMany(DetailJadwal::class, 'jadwal_id');
-}
+    {
+        return $this->hasMany(DetailJadwal::class, 'jadwal_id', 'id');
+    }
+    public function type_inspeksi()
+    {
+        return $this->belongsTo(TypeInspeksi::class, 'type_inspeksi_id'); // sesuaikan foreign key-nya
+    }
+ 
 
 }
