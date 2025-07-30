@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MaintenanceScheduleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JadwalController;
@@ -83,9 +84,25 @@ Route::middleware(['auth', 'role:pic'])->prefix('pic')->name('pic.')->group(func
 // ==========================
 // Pelaksana Routes
 // ==========================
+<<<<<<< HEAD
+Route::middleware(['auth', 'role:pelaksana'])->group(function () {
+    Route::get('/pelaksana', fn() => view('pelaksana.dashboard'))->name('pelaksana.dashboard');
+
+    Route::get('/pelaksana/jadwal', [MaintenanceScheduleController::class, 'index'])->name('pelaksana.daftarjadwal');
+    Route::get('/pelaksana/jadwal/{jadwal}', [MaintenanceScheduleController::class, 'show'])->name('pelaksana.jadwal.show');
+    Route::get('/pelaksana/jadwal/{jadwal}/edit', [MaintenanceScheduleController::class, 'edit'])->name('pelaksana.asetjadwal');
+    Route::patch('/pelaksana/jadwal/{jadwal}/approve', [MaintenanceScheduleController::class, 'approve'])->name('pelaksana.jadwal.approve');
+    Route::delete('/pelaksana/jadwal/{jadwal}', [MaintenanceScheduleController::class, 'destroy'])->name('pelaksana.jadwal.destroy');
+    Route::put('/pelaksana/jadwal/{jadwal}', [MaintenanceScheduleController::class, 'update'])->name('pelaksana.jadwal.update');
+});
+
+
+
+=======
 Route::middleware(['auth', 'role:pelaksana'])->prefix('pelaksana')->name('pelaksana.')->group(function () {
     Route::view('/', 'pelaksana.dashboard')->name('dashboard');
 });
+>>>>>>> 2ee3ae382efb6fae6098d1ccc99418a08c306b01
 
 // ==========================
 // Profile Routes

@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $table = 'locations'; // nama tabel sesuai database
+    protected $table = 'locations'; // Nama tabel di database
 
-    protected $primaryKey = 'id'; // default sebenarnya sudah id, tapi buat eksplisit
+    protected $primaryKey = 'id'; // ID sebagai primary key
 
     protected $fillable = [
         'lokasi',
@@ -16,9 +16,21 @@ class Location extends Model
         'nama_manager',
     ];
 
-    // Jika kamu ingin relasi ke manager (jika ada tabel manager)
-    // public function manager()
-    // {
-    //     return $this->belongsTo(Manager::class, 'manager_id');
-    // }
+    // Relasi ke user yang menjadi manager
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    // Relasi ke aset yang berada di lokasi ini
+    public function assets()
+    {
+        return $this->hasMany(Asset::class);
+    }
+
+    // Relasi ke jadwal pemeliharaan di lokasi ini
+    public function maintenanceSchedules()
+    {
+        return $this->hasMany(MaintenanceSchedule::class);
+    }
 }
