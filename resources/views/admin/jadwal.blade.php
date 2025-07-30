@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,18 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <style>
         .sidebar-gradient {
-            background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
+            background: linear-gradient(180deg, #2563eb 0%, #1e40af 100%);
         }
+
         .material-symbols-outlined {
             font-variation-settings:
-              'FILL' 0,
-              'wght' 400,
-              'GRAD' 0,
-              'opsz' 24;
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+
+<body class="bg-gray-50 min-h-screen">
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-64 sidebar-gradient text-white flex flex-col">
@@ -36,107 +39,274 @@
             <!-- Navigation -->
             <nav class="flex-1 p-4">
                 <ul class="space-y-1">
-                    <li>
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
-                            <span class="material-symbols-outlined">dashboard</span>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.jadwal') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
-                            <span class="material-symbols-outlined">event_note</span>
-                            <span>Jadwal</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.aset') }}"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
-                            <span class="material-symbols-outlined">inventory_2</span>
-                            <span>Aset</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                           class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10 text-white">
-                            <span class="material-symbols-outlined">tune</span>
-                            <span>Parameter</span>
-                        </a>
-                    </li>
+                    <li><a href="{{ route('admin.dashboard') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10"><span
+                                class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a></li>
+                    <li><a href="{{ route('admin.jadwal.index') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 font-medium"><span
+                                class="material-symbols-outlined">event_note</span><span>Jadwal</span></a></li>
+                    <li><a href="{{ route('admin.aset.index') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10"><span
+                                class="material-symbols-outlined">inventory_2</span><span>Aset</span></a></li>
+                    <li><a href="{{ route('admin.parameter.index') }}"
+                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10"><span
+                                class="material-symbols-outlined">tune</span><span>Parameter</span></a></li>
                 </ul>
             </nav>
+            <div class="p-4 border-t border-blue-400">
+                <ul class="space-y-1">
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <span class="material-symbols-outlined">logout</span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col">
-            <!-- Top Bar -->
-            <div class="sidebar-gradient text-white shadow border-b p-4 flex items-center justify-end">
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm">{{ auth()->user()->name ?? 'Admin' }}</span>
-                    <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            <div class="sidebar-gradient text-white p-4 flex justify-between items-center shadow">
+                <div class="text-lg font-semibold">
+                    <!-- Daftar Jadwal -->
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm">{{ auth()->user()->username ?? 'Admin' }}</span>
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zM3 18a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
                         </svg>
                     </div>
                 </div>
             </div>
 
-            <!-- Content -->
             <div class="flex-1 p-8 overflow-auto">
-                <div class="max-w-7xl mx-auto bg-white shadow rounded-lg p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-semibold text-gray-800">Daftar Jadwal</h2>
-                        <a href="{{ route('admin.jadwal.form') }}"
-                           class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">add</span>
-                            Tambah Jadwal
-                        </a>
+                <div class="bg-white shadow rounded-lg">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-gray-900">Daftar Jadwal</h2>
+                            <a href="{{ route('admin.jadwal.create') }}"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg flex items-center gap-2 shadow">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                Tambah Jadwal
+                            </a>
+                        </div>
+
+                        @if (session('success'))
+                            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <div class="overflow-x-auto">
+                            @if ($jadwals->count() > 0)
+                                <table class="w-full border-collapse">
+                                    <thead class="bg-blue-600 text-white">
+                                        <tr>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">No</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">Tanggal</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">Nama</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">Bulan</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">Status</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold border">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($jadwals as $index => $jadwal)
+                                            @php
+                                                $statusText = [
+                                                    0 => ['label' => 'Draf', 'color' => 'bg-gray-200 text-gray-700'],
+                                                    1 => ['label' => 'Submit', 'color' => 'bg-blue-100 text-blue-700'],
+                                                    2 => [
+                                                        'label' => 'Waiting',
+                                                        'color' => 'bg-yellow-100 text-yellow-700',
+                                                    ],
+                                                    3 => [
+                                                        'label' => 'Active',
+                                                        'color' => 'bg-green-100 text-green-700',
+                                                    ],
+                                                    4 => [
+                                                        'label' => 'Done',
+                                                        'color' => 'bg-purple-100 text-purple-700',
+                                                    ],
+                                                ];
+                                                $status = $statusText[$jadwal->status_jadwal] ?? [
+                                                    'label' => 'Unknown',
+                                                    'color' => 'bg-gray-100 text-gray-500',
+                                                ];
+                                            @endphp
+                                            <tr
+                                                class="{{ $index % 2 == 0 ? 'bg-white' : 'bg-gray-50' }} hover:bg-blue-50 transition">
+                                                <td class="px-4 py-4 text-sm text-gray-900 border text-center">
+                                                    {{ $jadwals->firstItem() + $index }}</td>
+                                                <td class="px-4 py-4 text-sm text-gray-900 border text-center">
+                                                    {{ \Carbon\Carbon::parse($jadwal->created_at)->format('d M Y') }}
+                                                </td>
+                                                <td class="px-4 py-4 text-sm text-gray-900 border text-center">
+                                                    {{ $jadwal->nama }}</td>
+                                                @php
+                                                    $bulanFinal = '-';
+                                                    try {
+                                                        $bulanFinal = \Carbon\Carbon::createFromFormat(
+                                                            'Y-m',
+                                                            $jadwal->bulan,
+                                                        )->translatedFormat('F');
+                                                    } catch (\Exception $e) {
+                                                        $bulanFinal = '-';
+                                                    }
+                                                @endphp
+                                                <td class="px-4 py-4 text-sm text-gray-900 border text-center">
+                                                    {{ $bulanFinal }}
+                                                </td>
+
+                                                <td class="px-4 py-4 text-sm text-gray-900 border text-center">
+                                                    <span
+                                                        class="{{ $status['color'] }} px-2 py-1 rounded-full text-xs">{{ $status['label'] }}</span>
+                                                </td>
+                                                <td class="px-4 py-4 text-sm text-gray-700 border text-center">
+                                                    <div class="flex justify-center items-center gap-2">
+                                                        {{-- Draf --}}
+                                                        @if ($jadwal->status_jadwal === 0)
+                                                            <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
+                                                                class="text-blue-600 hover:text-blue-800"
+                                                                title="Edit">
+                                                                <span class="material-symbols-outlined">edit</span>
+                                                            </a>
+                                                            <form
+                                                                action="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Yakin hapus?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="text-red-600 hover:text-red-800"
+                                                                    title="Hapus">
+                                                                    <span
+                                                                        class="material-symbols-outlined">delete</span>
+                                                                </button>
+                                                            </form>
+                                                            <form
+                                                                action="{{ route('admin.jadwal.ubahStatus', $jadwal->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Ajukan jadwal ini?')">
+                                                                @csrf
+                                                                <input type="hidden" name="status_jadwal"
+                                                                    value="1">
+                                                                <button type="submit"
+                                                                    class="text-green-600 hover:text-green-800"
+                                                                    title="Ajukan">
+                                                                    <span class="material-symbols-outlined">send</span>
+                                                                </button>
+                                                            </form>
+
+                                                            {{-- Submit (Status 1) --}}
+                                                        @elseif ($jadwal->status_jadwal === 1)
+                                                            <span class="text-gray-500 text-sm">Menunggu
+                                                                persetujuan</span>
+
+                                                            {{-- Waiting --}}
+                                                        @elseif ($jadwal->status_jadwal === 2)
+                                                            <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
+                                                                class="text-blue-600 hover:text-blue-800"
+                                                                title="Edit">
+                                                                <span class="material-symbols-outlined">edit</span>
+                                                            </a>
+                                                            <form
+                                                                action="{{ route('admin.jadwal.destroy', $jadwal->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Yakin hapus?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="text-red-600 hover:text-red-800"
+                                                                    title="Hapus">
+                                                                    <span
+                                                                        class="material-symbols-outlined">delete</span>
+                                                                </button>
+                                                            </form>
+                                                            <form
+                                                                action="{{ route('admin.jadwal.ubahStatus', $jadwal->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Ajukan ulang jadwal ini?')">
+                                                                @csrf
+                                                                <input type="hidden" name="status_jadwal"
+                                                                    value="1">
+                                                                <button type="submit"
+                                                                    class="text-green-600 hover:text-green-800"
+                                                                    title="Ajukan Ulang">
+                                                                    <span class="material-symbols-outlined">send</span>
+                                                                </button>
+                                                            </form>
+                                                            @if ($jadwal->status_jadwal === 2)
+                                                                <form
+                                                                    action="{{ route('admin.jadwal.ubahStatus', $jadwal->id) }}"
+                                                                    method="POST"
+                                                                    onsubmit="return confirm('Aktifkan jadwal ini?')">
+                                                                    @csrf
+                                                                    <input type="hidden" name="status_jadwal"
+                                                                        value="3">
+                                                                    <button type="submit"
+                                                                        class="text-green-600 hover:text-green-800"
+                                                                        title="Aktifkan">
+                                                                        <span
+                                                                            class="material-symbols-outlined">play_arrow</span>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+
+                                                            {{-- Active --}}
+                                                        @elseif ($jadwal->status_jadwal === 3)
+                                                            <form
+                                                                action="{{ route('admin.jadwal.ubahStatus', $jadwal->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Tandai sebagai selesai?')">
+                                                                @csrf
+                                                                <input type="hidden" name="status_jadwal"
+                                                                    value="4">
+                                                                <button type="submit"
+                                                                    class="text-purple-600 hover:text-purple-800"
+                                                                    title="Selesai">
+                                                                    <span
+                                                                        class="material-symbols-outlined">check_circle</span>
+                                                                </button>
+                                                            </form>
+
+                                                            {{-- Done (Status 4) --}}
+                                                        @elseif ($jadwal->status_jadwal === 4)
+                                                            <span class="text-gray-500 text-sm">Selesai</span>
+
+                                                            {{-- Unknown status --}}
+                                                        @else
+                                                            <span class="text-red-500 text-sm">Status tidak
+                                                                valid</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
+                                <div class="mt-4 px-4 py-3 border-t border-gray-200">
+                                    {{ $jadwals->links() }}
+                                </div>
+                            @else
+                                <div class="p-4 text-center text-gray-500">
+                                    Belum ada data jadwal ditambahkan.
+                                </div>
+                            @endif
+                        </div>
                     </div>
-
-                    <p class="text-gray-600 mb-6">Halaman ini akan menampilkan daftar jadwal maintenance.</p>
-
-                    @if(session('success'))
-                        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if($jadwals->count() > 0)
-                        <table class="min-w-full table-auto border-collapse border border-gray-300 text-left text-sm">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="border border-gray-300 px-4 py-2">#</th>
-                                    <th class="border border-gray-300 px-4 py-2">Tanggal</th>
-                                    <th class="border border-gray-300 px-4 py-2">Nama Jadwal</th>
-                                    <th class="border border-gray-300 px-4 py-2">Lokasi</th>
-                                    <th class="border border-gray-300 px-4 py-2">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($jadwals as $index => $jadwal)
-                                    <tr class="{{ $index % 2 == 0 ? 'bg-white' : 'bg-gray-50' }}">
-                                        <td class="border border-gray-300 px-4 py-2">{{ $jadwals->firstItem() + $index }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($jadwal->schedule_date)->format('d M Y') }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $jadwal->nama_jadwal ?? '-' }}</td>
-                                        <td class="border border-gray-300 px-4 py-2">{{ $jadwal->location_id }}</td>
-                                        <td class="border border-gray-300 px-4 py-2 capitalize">{{ $jadwal->status }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        <div class="mt-4">
-                            {{ $jadwals->links() }}
-                        </div>
-                    @else
-                        <div class="mt-6 border rounded-lg p-4 text-sm text-gray-500 bg-blue-50">
-                            Belum ada data jadwal yang ditampilkan. Silakan hubungkan dengan database nanti.
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

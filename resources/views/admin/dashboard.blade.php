@@ -54,28 +54,28 @@
             <nav class="flex-1 p-4">
                 <ul class="space-y-1">
                     <li>
-                        <a href="{{ route('dashboard') }}"
+                        <a href="{{ route('admin.dashboard') }}"
                            class="flex items-center gap-4 p-3 rounded-lg bg-white bg-opacity-20 text-white font-medium">
                             <span class="material-symbols-outlined">dashboard</span>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.jadwal') }}"
+                        <a href="{{ route('admin.jadwal.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">event_note</span>
                             <span>Jadwal</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.aset') }}"
+                        <a href="{{ route('admin.aset.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">inventory_2</span>
                             <span>Aset</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ route('admin.parameter.index') }}"
                            class="flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
                             <span class="material-symbols-outlined">tune</span>
                             <span>Parameter</span>
@@ -83,30 +83,39 @@
                     </li>
                 </ul>
             </nav>
+            <div class="p-4 border-t border-blue-400">
+                <ul class="space-y-1">
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <span class="material-symbols-outlined">logout</span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <!-- Main content -->
         <div class="flex-1 flex flex-col">
             <!-- Top Bar -->
-            <header class="sidebar-gradient text-white shadow p-4 flex items-center justify-between">
-                <div class="text-lg font-semibold">
-                    Dashboard Admin
+            <div class="sidebar-gradient text-white p-4 flex justify-end">
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm">{{ auth()->user()->username ?? 'Admin' }}</span>
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zM3 18a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-sm">{{ auth()->user()->name ?? 'Admin' }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </header>
+            </div>
 
             <!-- Content -->
             <main class="flex-1 p-8 overflow-auto">
                 <div class="max-w-7xl mx-auto">
-                    <h2 class="text-xl font-bold mb-6">Selamat datang, {{ auth()->user()->name ?? 'Admin' }}</h2>
+                    <h2 class="text-xl font-bold mb-6">Selamat datang, {{ auth()->user()->username ?? 'Admin' }}</h2>
 
                     <!-- Cards -->
                     <div class="grid grid-cols-2 gap-6 mb-8">
